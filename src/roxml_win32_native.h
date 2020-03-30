@@ -26,9 +26,9 @@ typedef HANDLE pthread_t;
 typedef CRITICAL_SECTION pthread_mutex_t;
 
 #define pthread_self()                 GetCurrentThread()
-#define pthread_mutex_init(a, b)       InitializeCriticalSection(a)
-#define pthread_mutex_lock(a)          EnterCriticalSection(a)
-#define pthread_mutex_unlock(a)                LeaveCriticalSection(a)
-#define pthread_mutex_destroy(a)       DeleteCriticalSection(a)
+#define pthread_mutex_init(a, b)       InitializeCriticalSection(a), 0
+#define pthread_mutex_lock(a)          EnterCriticalSection(a), 0
+#define pthread_mutex_unlock(a)        LeaveCriticalSection(a), 0
+#define pthread_mutex_destroy(a)       DeleteCriticalSection(a), 0
 
 #endif /* ROXML_WIN32_NATIVE_THREAD_H */

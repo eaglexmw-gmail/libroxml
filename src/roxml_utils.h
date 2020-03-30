@@ -46,7 +46,11 @@ ROXML_STATIC_INLINE ROXML_INT int roxml_unlock(node_t *n)
 	return 0;
 }
 #else /* CONFIG_XML_THREAD_SAFE==1 */
-ROXML_STATIC_INLINE ROXML_INT unsigned long int roxml_thread_id(node_t *n)
+#if defined(_MSC_VER)
+ROXML_STATIC_INLINE ROXML_INT void* roxml_thread_id(node_t *n)
+#else
+ROXML_STATIC_INLINE ROXML_INT unsigned long int roxml_thread_id(node_t* n)
+#endif
 {
 	return pthread_self();
 }
@@ -55,13 +59,13 @@ ROXML_STATIC_INLINE ROXML_INT int roxml_lock_init(node_t *n)
 {
 	xpath_tok_table_t *table = (xpath_tok_table_t *)n->priv;
 	table->lock = malloc(sizeof(pthread_mutex_t));
-	return pthread_mutex_init(table->lock, NULL);
+	return pthread_mutex_init((pthread_mutex_t*)(table->lock), NULL);
 }
 
 ROXML_STATIC_INLINE ROXML_INT int roxml_lock_destroy(node_t *n)
 {
 	xpath_tok_table_t *table = (xpath_tok_table_t *)n->priv;
-	pthread_mutex_destroy(table->lock);
+	pthread_mutex_destroy((pthread_mutex_t*)(table->lock));
 	free(table->lock);
 	return 0;
 }
@@ -73,7 +77,7 @@ ROXML_STATIC_INLINE ROXML_INT int roxml_lock(node_t *n)
 		n = n->prnt;
 	
 	table = (xpath_tok_table_t *)n->priv;
-	return pthread_mutex_lock(table->lock);
+	return pthread_mutex_lock((pthread_mutex_t*)(table->lock));
 }
 
 ROXML_STATIC_INLINE ROXML_INT int roxml_unlock(node_t *n)
@@ -83,7 +87,7 @@ ROXML_STATIC_INLINE ROXML_INT int roxml_unlock(node_t *n)
 		n = n->prnt;
 	
 	table = (xpath_tok_table_t *)n->priv;
-	return pthread_mutex_unlock(table->lock);
+	return pthread_mutex_unlock((pthread_mutex_t*)(table->lock));
 }
 #endif /* CONFIG_XML_THREAD_SAFE */
 

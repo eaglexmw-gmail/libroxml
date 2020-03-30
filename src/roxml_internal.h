@@ -20,7 +20,13 @@
 #else
 #define ROXML_STATIC static
 #endif
+#ifndef _MSC_VER
+#define ROXML_STATIC_INLINE static
+#else
+/* pure c function: forbit inline keyword */
 #define ROXML_STATIC_INLINE static inline
+#define inline
+#endif
 
 /* STUB function are here to provide a consistent libroxml binary no matter
  * what the configuration. They are located in a specific section that can be
@@ -30,7 +36,11 @@
 /* PARSE functions are used when doing the parsing of document. This is a time
  * sensitive section and all concerned function are stored inside a same section
  */
+#ifndef _MSC_VER
 #define ROXML_PARSE __attribute__((section("__parse")))
+#else
+#define ROXML_PARSE
+#endif
 
 /* PARSE_ERROR macro will raise an parsing error along with its reason */
 #ifdef VERBOSE_PARSING

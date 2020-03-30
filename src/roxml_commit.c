@@ -12,7 +12,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
+#ifndef _MSC_VER
 #include <unistd.h>
+#endif
 #include "roxml_core.h"
 
 ROXML_STATIC ROXML_INT void roxml_realloc_buf(char **buf, int *len, int min_len)

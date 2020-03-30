@@ -41,7 +41,11 @@ typedef struct memory_cell {
 	int type;		/*!< pointer type from PTR_NODE, PTR_CHAR... */
 	int occ;		/*!< number of element */
 	void *ptr;		/*!< pointer */
+#if (defined _WIN64 || defined WIN64 || defined _WIN32 || defined WIN32 || defined WINCE)
+	void* id;
+#else
 	unsigned long int id;	/*!< thread id of allocator */
+#endif
 	struct memory_cell *next;	/*!< next memory cell */
 	struct memory_cell *prev;	/*!< prev memory cell */
 } memory_cell_t;
